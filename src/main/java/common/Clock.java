@@ -19,10 +19,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Clock extends Application implements Initializable {
-    private static int CLOCK_RENDERING_DELAY = 500; // msec
-    private static String CLOCK_TITLE = "Digital clock";
-    private DateTimeFormatter formatter;
+    private static final int CLOCK_RENDERING_DELAY = 500; // msec
+    private static final String CLOCK_TITLE = "Digital clock";
+    private static final String LAYOUT_FILE = "layout.fxml";
+    private static final String STYLESHEET_FILE = "style.css";
 
+    private DateTimeFormatter formatter;
     @FXML private Label clockLabel;
 
     public Clock() {
@@ -45,7 +47,7 @@ public class Clock extends Application implements Initializable {
         FXMLLoader loader = null;
         Parent root = null;
         try {
-            loader = new FXMLLoader(getClass().getResource("layout.fxml"));
+            loader = new FXMLLoader(getClass().getResource(LAYOUT_FILE));
             loader.setController(new Clock());
             root = (Parent) loader.load();
         } catch (IOException ex) {
@@ -53,8 +55,11 @@ public class Clock extends Application implements Initializable {
             System.exit(1);
         }
 
+        Scene scene = new Scene(root, 600, 800);
+        String style = getClass().getResource(STYLESHEET_FILE).toExternalForm();
+        scene.getStylesheets().add(style);
+        stage.setScene(scene);
         stage.setTitle(CLOCK_TITLE);
-        stage.setScene(new Scene(root, 600, 800));
         stage.setResizable(false);
         stage.show();
     }
