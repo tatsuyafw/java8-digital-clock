@@ -1,4 +1,8 @@
+#main {
+	-fx-background-color: #FFFFFF;
+}
+
 #clockLabel {
-	-fx-font-size: 100pt;
-	-fx-text-fill: #FF0000;
+	-fx-font-size: 20pt;
+	-fx-text-fill: #6D6E7E;
 }

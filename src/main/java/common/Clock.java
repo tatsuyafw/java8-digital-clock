@@ -55,7 +55,8 @@ public class Clock extends Application implements Initializable {
             System.exit(1);
         }
 
-        Scene scene = new Scene(root, 600, 800);
+        //Scene scene = new Scene(root, 600, 800);
+        Scene scene = new Scene(root);
         String style = getClass().getResource(STYLESHEET_FILE).toExternalForm();
         scene.getStylesheets().add(style);
         stage.setScene(scene);

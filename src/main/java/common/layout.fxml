@@ -7,14 +7,20 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml" >
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:id="main"
+    hgap="10" vgap="10" prefWidth="600" prefHeight="800">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10" />
     </padding>
     <children>
-        <Label fx:id="clockLabel"
-            GridPane.columnIndex="0"
-            GridPane.rowIndex="0" 
-            GridPane.halignment="RIGHT" />
+        <VBox>
+
+        <HBox spacing="10" alignment="bottom_right"
+            GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <TextField fx:id="search" text="Search" />
+            <Label fx:id="clockLabel" />
+        </HBox>
+        <ListView fx:id="listBoxMain" prefHeight="200.0" prefWidth="200.0" />
+        </VBox>
     </children>
 </GridPane>
