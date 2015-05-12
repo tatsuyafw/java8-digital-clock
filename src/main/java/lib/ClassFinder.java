@@ -13,11 +13,17 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
 public class ClassFinder {
+
+    /**
+     * Example
+     */
+    /*
     public static void main(String[] args) {
-        for (Class<?> klass : getClasses("java.lang")) {
-            System.out.println(klass.getCanonicalName());
-        }
+        getClasses("java").stream().sorted((a, b) -> {
+            return a.getName().compareTo(b.getName());
+        }).forEach(System.out::println);
     }
+    */
 
     /**
      * See: http://qiita.com/kei2100/items/a9ba32a86bb0e685ecc7
