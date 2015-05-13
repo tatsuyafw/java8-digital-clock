@@ -13,6 +13,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,22 +27,25 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lib.ClassFinder;
 
 public class Clock extends Application implements Initializable {
     private static final int CLOCK_RENDERING_DELAY = 500; // msec
     private static final String CLOCK_TITLE = "Digital clock";
     private static final String LAYOUT_FILE = "layout.fxml";
     private static final String STYLESHEET_FILE = "style.css";
-    private static final String[] DUMMY_DATA = {
-        "Java", "JavaScript", "ShellScript", "Ruby", "Python", "Perl", "Go", "PHP", "Haskell", "Clojure", "C", "C++", "Lua" };
+
+    private static final String LOCATED_ROOT_PACKAGE = "java";
+    //private static final String[] DUMMY_DATA = {
+    //    "Java", "JavaScript", "ShellScript", "Ruby", "Python", "Perl", "Go", "PHP", "Haskell", "Clojure", "C", "C++", "Lua" };
 
     @FXML private TextField query;
     @FXML private Label clockLabel;
-    @FXML private ListView<String> searchResult;
+    @FXML private ListView<Class<?>> searchResult;
 
     private DateTimeFormatter formatter;
-    private ObservableList<String> masterData = FXCollections.observableArrayList(DUMMY_DATA);
-    private FilteredList<String> filteredResult;
+    private ObservableList<Class<?>> masterData = FXCollections.observableArrayList();
+    private FilteredList<Class<?>> filteredResult;
 
     public Clock() {
         formatter = DateTimeFormatter.ofPattern("HH:mm ss");
@@ -52,9 +56,10 @@ public class Clock extends Application implements Initializable {
          * See: http://code.makery.ch/blog/javafx-2-event-handlers-and-change-listeners/
          */
         return (property, oldValue, newValue) -> {
-            filteredResult.setPredicate(item -> {
+            filteredResult.setPredicate(klass -> {
+                String className = klass.getName();
                 // TODO: 大文字小文字を区別するかどうかを設定できるようにする
-                return item.toLowerCase().contains(newValue.toLowerCase());
+                return className.toLowerCase().contains(newValue.toLowerCase());
             });
         };
     }
@@ -78,6 +83,8 @@ public class Clock extends Application implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        masterData = FXCollections.observableArrayList(ClassFinder.getClasses(LOCATED_ROOT_PACKAGE));
+
         // 時計の設定
         clockLabel.setText(formattedDate());
         Timeline timer = new Timeline(new KeyFrame(Duration.millis(CLOCK_RENDERING_DELAY), event -> {
@@ -91,7 +98,10 @@ public class Clock extends Application implements Initializable {
         // 検索
         filteredResult = new FilteredList<>(masterData, p -> true);
         query.textProperty().addListener(onQueryChanged());
-        searchResult.setItems(filteredResult);
+        SortedList<Class<?>> sortedResult = new SortedList<>(filteredResult, (klass1, klass2) -> {
+            return klass1.getName().compareTo(klass2.getName());
+        });
+        searchResult.setItems(sortedResult);
     };
 
     @Override

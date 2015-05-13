@@ -29,7 +29,7 @@ public class ClassFinder {
      * See: http://qiita.com/kei2100/items/a9ba32a86bb0e685ecc7
      */
     @SuppressWarnings("rawtypes")
-    private static Set<Class> getClasses(String packageName) {
+    public static Set<Class> getClasses(String packageName) {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         JavaFileManager jfm = compiler.getStandardFileManager(new DiagnosticCollector<JavaFileObject>(), null, null);
 
