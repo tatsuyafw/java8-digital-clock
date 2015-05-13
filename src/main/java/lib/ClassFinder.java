@@ -28,8 +28,7 @@ public class ClassFinder {
     /**
      * See: http://qiita.com/kei2100/items/a9ba32a86bb0e685ecc7
      */
-    @SuppressWarnings("rawtypes")
-    public static Set<Class> getClasses(String packageName) {
+    public static Set<Class<?>> getClasses(String packageName) {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         JavaFileManager jfm = compiler.getStandardFileManager(new DiagnosticCollector<JavaFileObject>(), null, null);
 
@@ -37,7 +36,7 @@ public class ClassFinder {
         kind.add(JavaFileObject.Kind.CLASS);
 
         boolean recursive = true;
-        Set<Class> classes = new HashSet<Class>();
+        Set<Class<?>> classes = new HashSet<>();
 
         try {
             for (JavaFileObject jfo : jfm.list(StandardLocation.PLATFORM_CLASS_PATH, packageName, kind, recursive)) {
