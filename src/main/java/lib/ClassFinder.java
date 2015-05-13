@@ -50,7 +50,7 @@ public class ClassFinder {
                     String fqcnWithExtension = uriDotSeparate.substring(indexOfPkgNmBegin); // FQCN: Fully Qualified Class Name
                     String fqcn = fqcnWithExtension.replaceFirst(".class$", "");
 
-                    Class klass = Class.forName(fqcn);
+                    Class<?> klass = Class.forName(fqcn);
                     classes.add(klass);
                 } catch (NoClassDefFoundError e) {
                     System.err.println("get class failed. " + uri);
