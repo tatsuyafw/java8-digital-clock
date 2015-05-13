@@ -36,9 +36,6 @@ public class Clock extends Application implements Initializable {
     private static final String STYLESHEET_FILE = "style.css";
 
     private static final String LOCATED_ROOT_PACKAGE = "java";
-    //private static final String[] DUMMY_DATA = {
-    //    "Java", "JavaScript", "ShellScript", "Ruby", "Python", "Perl", "Go", "PHP", "Haskell", "Clojure", "C", "C++", "Lua" };
-
     @FXML private TextField query;
     @FXML private Label clockLabel;
     @FXML private ListView<Class<?>> searchResult;
