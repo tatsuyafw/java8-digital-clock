@@ -1,6 +1,5 @@
 package lib;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class ClassFinder {
 
                 try {
                     uri = jfo.toUri().toString();
-                    String uriDotSeparate = uri.replaceAll(File.separator, ".");
+                    String uriDotSeparate = uri.replaceAll("/", "."); // If File.separator is used, a runtime exception happens.
 
                     int indexOfPkgNmBegin = uriDotSeparate.indexOf(packageName);
                     String fqcnWithExtension = uriDotSeparate.substring(indexOfPkgNmBegin); // FQCN: Fully Qualified Class Name
