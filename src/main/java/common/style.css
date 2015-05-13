@@ -1,8 +1,20 @@
 #main {
+	-fx-pref-width: 600;
+	-fx-pref-height: 800;
 	-fx-background-color: #FFFFFF;
+}
+
+#query {
+	-fx-pref-width: 420;
 }
 
 #clockLabel {
 	-fx-font-size: 20pt;
 	-fx-text-fill: #6D6E7E;
+    -fx-padding: 0 0 0 50;
+}
+
+#searchResult {
+    -fx-pref-width: 580;
+    -fx-pref-height: 740;
 }
