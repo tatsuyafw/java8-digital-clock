@@ -38,6 +38,21 @@ public class MethodInfo {
 
     }
 
+    public boolean isMatchedLambdaSignature(String[] params, String returnType) {
+        String[] parameters = parametersToStringList(this.parameters).toArray(new String[this.parameters.length]);
+
+        for (int i = 0; i < params.length; i++) {
+            if (i >= parameters.length) return false;
+            if ( ! params[i].equals(parameters[i]) ) return false;
+        }
+
+        if (returnType != null && ! returnType.equals(this.returnType) ) {
+            return false;
+        }
+
+        return true;
+    }
+
     private static List<String> parametersToStringList(Parameter[] parameters) {
         return Stream.of(parameters).map(parameter -> parameter.getType().getSimpleName()).collect(Collectors.toList());
     }

@@ -5,6 +5,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -36,6 +37,8 @@ public class Clock extends Application implements Initializable {
     private static final String LAYOUT_FILE = "layout.fxml";
     private static final String STYLESHEET_FILE = "style.css";
 
+    private static final String QUERY_STRING_PATTERN = "[a-zA-Z>\\-, ]*";
+
     private static final String LOCATED_ROOT_PACKAGE = "java";
     @FXML private TextField query;
     @FXML private Label clockLabel;
@@ -49,15 +52,53 @@ public class Clock extends Application implements Initializable {
         formatter = DateTimeFormatter.ofPattern("HH:mm ss");
     }
 
+    private static boolean isValidQuery(String query) {
+        if ( query.isEmpty() ) return true;
+        return query.matches(QUERY_STRING_PATTERN);
+    }
+
+    private static boolean isLambdaQuery(String query) {
+        return true;
+    }
+
+    private static String[] params(String query) {
+        String wholeParamsStr = query.split("->")[0]; // int, int
+        return Stream.of(wholeParamsStr.split(",")).map(param -> {
+           return param.trim();
+        }).toArray(String[]::new);
+    }
+
+    private static String returnType(String query) {
+        String lambdaReturnSymbol = "->";
+        if ( ! query.contains(lambdaReturnSymbol) ) return null;
+
+        String[] splited = query.split(lambdaReturnSymbol);
+        if (splited.length < 2) return null;
+        return splited[1].trim();
+    }
+
     private ChangeListener<String> onQueryChanged() {
         /**
          * See: http://code.makery.ch/blog/javafx-2-event-handlers-and-change-listeners/
          */
         return (property, oldQeury, newQuery) -> {
+            // 検索クエリが正しいクエリになっていない場合はそのままにする
+            // TODO: 不正な文字列が入っている場合はその旨を伝える
+            if ( ! isValidQuery(newQuery) ) return;
+
+            // 大文字小文字を無視して検索
+            // TODO: 大文字小文字を区別するかどうかを設定できるようにする
             filteredResult.setPredicate(methodInfo -> {
-                String methodName = methodInfo.getMethodName();
-                // TODO: 大文字小文字を区別するかどうかを設定できるようにする
-                return methodName.toLowerCase().contains(newQuery.toLowerCase());
+                if (newQuery.isEmpty()) return true;
+
+                String trimedQuery = newQuery.trim();
+                if (newQuery.endsWith(",") || newQuery.endsWith("-") || newQuery.endsWith(">")) {
+                    trimedQuery = trimedQuery.replace("[\\-,>]", "");
+                }
+
+                trimedQuery = trimedQuery.trim();
+                Stream.of(params(trimedQuery)).forEach(System.out::println);;
+                return methodInfo.isMatchedLambdaSignature(params(trimedQuery), returnType(trimedQuery));
             });
         };
     }
