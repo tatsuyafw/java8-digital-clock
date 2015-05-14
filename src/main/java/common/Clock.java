@@ -115,7 +115,7 @@ public class Clock extends Application implements Initializable {
         }
 
         Scene scene = new Scene(root);
-        String style = getClass().getResource(STYLESHEET_FILE).toExternalForm();
+        String style = getClass().getResource("/" + STYLESHEET_FILE).toExternalForm();
         scene.getStylesheets().add(style);
         stage.setScene(scene);
         stage.setTitle(CLOCK_TITLE);

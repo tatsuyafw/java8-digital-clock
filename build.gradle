@@ -2,13 +2,11 @@ apply plugin: 'application'
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
-//this one works with file dependencies. If you prefer
-//e.g. Maven, feel free to change.
+// The following codes is for packaging of javafx application.
+// See: http://patrickmoule.net/2012/12/16/building-and-packaging-of-javafx-applications-with-gradle/
 def libFolder = 'lib'
 def includePattern = '*.jar'
-
 def javaFxHome = "${System.properties['java.home']}";
-
 def antJavaFxJar = "$javaFxHome/../lib/ant-javafx.jar"
 def vendor = "Tatsuya Hoshino"
 def version = 0.1
@@ -16,29 +14,18 @@ def title = "Digital Clock"
 
 sourceCompatibility = 1.8
 version = '1.0'
-/*
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
-                   'Implementation-Version': version
-    }
-}
-*/
 
 repositories {
     mavenCentral()
 }
 
 configurations {
-    //we do not want to have jfxrt.jar in the classpath when creating the jar,
-    //therefore a seperate configuration is required
     providedCompile
 }
 
 dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     compile fileTree(dir: libFolder, include: includePattern)
-    //testCompile group: 'junit', name: 'junit', version: '4.+'
     providedCompile files("$javaFxHome/lib/jfxrt.jar")
 }
 
@@ -58,28 +45,21 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-// The following codes is for packaging of javafx application.
-// See: http://patrickmoule.net/2012/12/16/building-and-packaging-of-javafx-applications-with-gradle/
-mainClassName = "Clock"
-
-//There seems to be an issue with Gradle detecting the JDK.
-//So, we have to help a wee bit to find the ant-javafx.jar
-//This may be different on your system.
-
+mainClassName = "common.Clock"
 
 compileJava {
-   //add required JavaFX libs to compile classpath
    sourceSets.main.compileClasspath += configurations.providedCompile
 }
 
-/*
+
 run {
    //add required JavaFX libs to runtime classpath
    classpath += configurations.providedCompile
 }
 
+
 //ant configuration for creating double-clickable, self-contained JAR
-ant.importBuild 'javafx.fxml'
+ant.importBuild 'javafx.xml'
 ant.antJavaFxJar = antJavaFxJar
 ant.mainClassName = mainClassName
 ant.fallbackClassName = 'com.javafx.main.NoJavaFXFallback'
@@ -93,17 +73,18 @@ ant.applicationVersion = version
 ant.applicationClasses = sourceSets.main.output.classesDir
 ant.applicationResources = sourceSets.main.output.resourcesDir
 
+
 //clear existing task actions and call ant task
 jar {
-   // reset actions
    actions = []
 
    doLast {
-       javafxjar.execute(); // <-- the task described in javafx.xml
+       javafxjar.execute();
+   }
 }
 
+/*
 //create some smarter looking start scripts
-
 startScripts {
    doLast {
        //unixScript.text = "java -jar ../lib/$jar.archiveName"
