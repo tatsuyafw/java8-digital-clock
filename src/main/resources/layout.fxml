@@ -15,7 +15,7 @@
     <children>
         <VBox>
             <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" > 
-                <TextField fx:id="query" promptText="search" />                                  
+                <TextField fx:id="query" promptText="int, int -> String" />
                 <Label fx:id="clockLabel" />
             </HBox>
         

@@ -35,7 +35,6 @@ public class MethodInfo {
 
     public String getMethodName() {
         return methodName;
-
     }
 
     public boolean isMatchedLambdaSignature(String[] params, String returnType) {
