@@ -39,7 +39,7 @@ public class Clock extends Application implements Initializable {
 
     private static final String QUERY_STRING_PATTERN = "[a-zA-Z>\\-, ]*";
 
-    private static final String LOCATED_ROOT_PACKAGE = "java";
+    private static final String TARGET_ROOT_PACKAGE = "java";
     @FXML private TextField query;
     @FXML private Label clockLabel;
     @FXML private ListView<MethodInfo> searchResult;
@@ -97,7 +97,6 @@ public class Clock extends Application implements Initializable {
                 }
 
                 trimedQuery = trimedQuery.trim();
-                Stream.of(params(trimedQuery)).forEach(System.out::println);;
                 return methodInfo.isMatchedLambdaSignature(params(trimedQuery), returnType(trimedQuery));
             });
         };
@@ -122,11 +121,7 @@ public class Clock extends Application implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        MethodStore methodStore = new MethodStore();
-
-        //masterData = FXCollections.observableArrayList(ClassFinder.getClasses(LOCATED_ROOT_PACKAGE));
-        masterData = FXCollections.observableArrayList(methodStore.search(""));
+        masterData = FXCollections.observableArrayList(MethodStore.allMethodInfo(TARGET_ROOT_PACKAGE));
 
         // 時計の設定
         clockLabel.setText(formattedDate());
