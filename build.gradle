@@ -2,6 +2,18 @@ apply plugin: 'application'
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
+//this one works with file dependencies. If you prefer
+//e.g. Maven, feel free to change.
+def libFolder = 'lib'
+def includePattern = '*.jar'
+
+def javaFxHome = "${System.properties['java.home']}";
+
+def antJavaFxJar = "$javaFxHome/../lib/ant-javafx.jar"
+def vendor = "Tatsuya Hoshino"
+def version = 0.1
+def title = "Digital Clock"
+
 sourceCompatibility = 1.8
 version = '1.0'
 /*
@@ -17,9 +29,17 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    //we do not want to have jfxrt.jar in the classpath when creating the jar,
+    //therefore a seperate configuration is required
+    providedCompile
+}
+
 dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
+    compile fileTree(dir: libFolder, include: includePattern)
+    //testCompile group: 'junit', name: 'junit', version: '4.+'
+    providedCompile files("$javaFxHome/lib/jfxrt.jar")
 }
 
 test {
@@ -42,39 +62,17 @@ tasks.withType(JavaCompile) {
 // See: http://patrickmoule.net/2012/12/16/building-and-packaging-of-javafx-applications-with-gradle/
 mainClassName = "Clock"
 
-def javaFxHome = "${System.properties['java.home']}";
 //There seems to be an issue with Gradle detecting the JDK.
 //So, we have to help a wee bit to find the ant-javafx.jar
 //This may be different on your system.
-def antJavaFxJar = "$javaFxHome/../lib/ant-javafx.jar"
 
-def vendor = "Tatsuya Hoshino"
-def version = 0.1
-def title = "Digital Clock"
-
-//this one works with file dependencies. If you prefer
-//e.g. Maven, feel free to change.
-def libFolder = 'lib'
-def includePattern = '*.jar'
-
-configurations {
-    //we do not want to have jfxrt.jar in the classpath when creating the jar,
-    //therefore a seperate configuration is required
-    providedCompile
-}
-
-/*
-
-dependencies {
-   providedCompile files("$javaFxHome/lib/jfxrt.jar")
-   compile fileTree(dir: libFolder, include: includePattern)
-}
 
 compileJava {
    //add required JavaFX libs to compile classpath
    sourceSets.main.compileClasspath += configurations.providedCompile
 }
 
+/*
 run {
    //add required JavaFX libs to runtime classpath
    classpath += configurations.providedCompile

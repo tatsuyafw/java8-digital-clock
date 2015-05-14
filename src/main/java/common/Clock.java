@@ -106,7 +106,7 @@ public class Clock extends Application implements Initializable {
         FXMLLoader loader = null;
         Parent root = null;
         try {
-            loader = new FXMLLoader(getClass().getResource(LAYOUT_FILE));
+            loader = new FXMLLoader(getClass().getResource("/" + LAYOUT_FILE));
             loader.setController(new Clock());
             root = (Parent) loader.load();
         } catch (IOException ex) {
