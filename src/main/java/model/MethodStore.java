@@ -26,7 +26,7 @@ public class MethodStore {
         String pack = "java.lang.";
 
         try {
-            for (Method method : Class.forName(pack + "Integer").getMethods() ){
+            for (Method method : Class.forName(pack + "Integer").getDeclaredMethods() ){
                 methods.add(new MethodInfo(method));
             }
         } catch (ClassNotFoundException ex) {

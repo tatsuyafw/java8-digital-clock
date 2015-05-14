@@ -1,27 +1,53 @@
 package model;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MethodInfo {
-    private String methodName;
+    private boolean isStatic = false ;
     private String packageName;
+    private String type;
+    private String typeName;
+    private String methodName;
+    private Parameter[] parameters;
+    private String returnType;
 
     MethodInfo(Method method) {
-        methodName = method.getName();
-        packageName = method.getDeclaringClass().getPackage().getName();
-    }
+        Class<?> klass = method.getDeclaringClass();
+        int mod = method.getModifiers();
 
-    public String getMethodName() {
-        return methodName;
+        isStatic = Modifier.isStatic(mod);
+        packageName = method.getDeclaringClass().getPackage().getName();
+        type = klass.isInterface() ? "interface" : "class";
+        typeName = klass.getSimpleName();
+        methodName = method.getName();
+        parameters = method.getParameters();
+        returnType = method.getReturnType().getSimpleName();
     }
 
     public String getPackageName() {
         return packageName;
     }
 
+    public String getMethodName() {
+        return methodName;
+
+    }
+
+    private static List<String> parametersToStringList(Parameter[] parameters) {
+        return Stream.of(parameters).map(parameter -> parameter.getType().getSimpleName()).collect(Collectors.toList());
+    }
+
     @Override
     public String toString() {
-        return methodName;
+        String separator = isStatic ? "." : "::";
+
+        return typeName + separator + methodName + "("
+          + String.join(", ", parametersToStringList(parameters)) + ") -> " + returnType;
     }
 
 }
